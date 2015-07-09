@@ -193,12 +193,24 @@ var pagePhotos = [
   "page-photos/Science-icons_universe-scale.png"
 ];
 
-var ScreenStyle = {
-  A: 0,
-  B: 1,
-  C: 2,
-  D: 3
-};
+var ScreenStyle = [
+  {
+    id: "A",
+    description: "Icon in circle"
+  },
+  {
+    id: "B",
+    description: "Icon with colored gradient"
+  },
+  {
+    id: "C",
+    description: "Icon with black gradient"
+  },
+  {
+    id: "D",
+    description: "Photo with gradient"
+  }
+];
 
 var randomNumber = function(min, max) {
   if (min > max) {
@@ -260,7 +272,7 @@ $(document).ready(function() {
   
   var PageHeader = React.createClass({displayName: "PageHeader",
     render: function() {
-      var styleID = this.props.styleID;
+      var style = this.props.style;
       var imageFilename = this.props.imageFilename;
       
       var title = getRandomPageTitle();
@@ -279,7 +291,7 @@ $(document).ready(function() {
       
       var isIcon = imageFilename.match(/^page-icons/);
       var gradientColor = "0, 0, 0";
-      if (isIcon && styleID != ScreenStyle.C) {
+      if (isIcon && style.id != "C") {
         if (imageFilename.match(/Math-/)) {
           gradientColor = "38, 109, 124";
         } else {
@@ -289,10 +301,14 @@ $(document).ready(function() {
       var imageURL = "images/" + imageFilename;
       
       var gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 0.32) 50%, rgba(" + gradientColor + ", 0.64) 100%)";
-      if (styleID == ScreenStyle.A) {
+      if (style.id == "A") {
         gradientStyle = "";
-      } else if (styleID == ScreenStyle.B) {
-        gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 1.0) 100%)";
+      } else if (style.id == "B") {
+        gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 0.85) 100%)";
+      }
+      var gradientBlendMode = "normal";
+      if (style.id == "C" || style.id == "D") {
+        gradientBlendMode = "multiply";
       }
       
       var gradient = React.createElement("div", {
@@ -302,11 +318,12 @@ $(document).ready(function() {
           top: "0",
           width: "100%",
           height: "100%",
+          mixBlendMode: gradientBlendMode,
           background: gradientStyle
         }
       });
       var image = null;
-      if (styleID == ScreenStyle.A) {
+      if (style.id == "A") {
         image = React.createElement("div", {
           style: {
             position: "absolute",
@@ -351,7 +368,7 @@ $(document).ready(function() {
   var App = React.createClass({displayName: "App",
     render: function() {
       var pageHeader = React.createElement(PageHeader, {
-        styleID: i, 
+        style: this.props.style, 
         imageFilename: imageFilename
       });
       return React.createElement("div", {
@@ -371,7 +388,7 @@ $(document).ready(function() {
     render: function() {
       var statusBar = React.createElement(AndroidStatusBar);
       var app = React.createElement(App, {
-        styleID: i, 
+        style: this.props.style, 
         imageFilename: imageFilename
       });
       var navBar = React.createElement(AndroidNavBar);
@@ -386,12 +403,23 @@ $(document).ready(function() {
   // Create some screens:
   var numScreens = 4;
   for (var i = 0; i < numScreens; i++) {
-    var screenID = "screen-" + (i + 1);
-    $("body").append("<div id=\"" + screenID + "\" class=\"screen\"></div>");
+    var style = ScreenStyle[i];
+    var screenID = "screen-" + i;
+    var container = $("<div></div>");
+    container.addClass("container");
+    var figure = $("<figure></figure>");
+    figure.addClass("screen");
+    figure.attr("id", screenID);
+    var caption = $("<figcaption></figcaption>");
+    caption.html(style.description);
+    container.append(figure);
+    container.append(caption);
+    $("body").append(container);
+    
     var container = $("#" + screenID).get(0);
-    var imageFilename = (i < 3) ? iconFilename : photoFilename;
+    var imageFilename = (style.id != "D") ? iconFilename : photoFilename;
     React.render(React.createElement(Canvas, {
-      styleID: i, 
+      style: style,
       imageFilename: imageFilename
     }), container);
   }

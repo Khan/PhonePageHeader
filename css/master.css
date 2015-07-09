@@ -19,13 +19,29 @@ body {
   background-color: #333;
 }
 
+.container {
+  display: inline-block;
+  margin: 32px;
+  padding: 0;
+}
+
 .screen {
   display: inline-block;
   width: 320px;
   height: 528px;
+  margin: 0;
+  padding: 0;
   background-color: #fff;
-  
-  margin: 32px;
+}
+
+.container figcaption {
+  width: 100%;
+  height: 56px;
+  margin-top: 8px;
+  text-align: center;
+  font-family: ProximaNovaRegular;
+  font-size: 14px;
+  color: #ccc;
 }
 
 .title-2 {
