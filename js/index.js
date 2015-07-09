@@ -195,7 +195,9 @@ var pagePhotos = [
 
 var ScreenStyle = {
   A: 0,
-  B: 1
+  B: 1,
+  C: 2,
+  D: 3
 };
 
 var randomNumber = function(min, max) {
@@ -277,7 +279,7 @@ $(document).ready(function() {
       
       var isIcon = imageFilename.match(/^page-icons/);
       var gradientColor = "0, 0, 0";
-      if (isIcon) {
+      if (isIcon && styleID != ScreenStyle.C) {
         if (imageFilename.match(/Math-/)) {
           gradientColor = "38, 109, 124";
         } else {
@@ -286,6 +288,13 @@ $(document).ready(function() {
       }
       var imageURL = "images/" + imageFilename;
       
+      var gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 0.32) 50%, rgba(" + gradientColor + ", 0.64) 100%)";
+      if (styleID == ScreenStyle.A) {
+        gradientStyle = "";
+      } else if (styleID == ScreenStyle.B) {
+        gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 1.0) 100%)";
+      }
+      
       var gradient = React.createElement("div", {
         style: {
           position: "absolute",
@@ -293,7 +302,7 @@ $(document).ready(function() {
           top: "0",
           width: "100%",
           height: "100%",
-          background: "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 0.32) 50%, rgba(" + gradientColor + ", 0.64) 100%)"
+          background: gradientStyle
         }
       });
       var image = null;
@@ -307,7 +316,8 @@ $(document).ready(function() {
             height: "128px",
             borderRadius: "90px",
             background: "url(" + imageURL + ") no-repeat center",
-            backgroundSize: "contain"
+            backgroundSize: "contain",
+            opacity: "0.64"
           }
         }); 
       } else {
@@ -374,12 +384,12 @@ $(document).ready(function() {
   var photoFilename = getRandomPageImageFilename(false);
   
   // Create some screens:
-  var numScreens = 3;
+  var numScreens = 4;
   for (var i = 0; i < numScreens; i++) {
     var screenID = "screen-" + (i + 1);
     $("body").append("<div id=\"" + screenID + "\" class=\"screen\"></div>");
     var container = $("#" + screenID).get(0);
-    var imageFilename = (i < 2) ? iconFilename : photoFilename;
+    var imageFilename = (i < 3) ? iconFilename : photoFilename;
     React.render(React.createElement(Canvas, {
       styleID: i, 
       imageFilename: imageFilename
