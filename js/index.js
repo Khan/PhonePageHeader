@@ -300,11 +300,11 @@ $(document).ready(function() {
       }
       var imageURL = "images/" + imageFilename;
       
-      var gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 0.32) 50%, rgba(" + gradientColor + ", 0.64) 100%)";
+      var gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 0.75) 100%)";
       if (style.id == "A") {
         gradientStyle = "";
       } else if (style.id == "B") {
-        gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0) 0%, rgba(" + gradientColor + ", 0.85) 100%)";
+        gradientStyle = "-webkit-linear-gradient(top, rgba(" + gradientColor + ", 0.32) 0%, rgba(" + gradientColor + ", 0.96) 100%)";
       }
       var gradientBlendMode = "normal";
       if (style.id == "C" || style.id == "D") {
@@ -401,10 +401,11 @@ $(document).ready(function() {
   var photoFilename = getRandomPageImageFilename(false);
   
   // Create some screens:
-  var numScreens = 4;
+  var screenStyles = [ScreenStyle[1], ScreenStyle[3]];
+  var numScreens = screenStyles.length;
   for (var i = 0; i < numScreens; i++) {
-    var style = ScreenStyle[i];
-    var screenID = "screen-" + i;
+    var style = screenStyles[i];
+    var screenID = "screen-" + style.id;
     var container = $("<div></div>");
     container.addClass("container");
     var figure = $("<figure></figure>");
